@@ -7,6 +7,7 @@ from modules.network_stats import get_network_speed, get_network_io, get_active_
 from modules.process_stats import get_all_processes
 from modules.system_stats import get_cpu_usage, get_disk_usage, get_disk_io_stats, get_memory_usage, get_per_cpu_usage, get_swap_usage
 
+
 # Initialize app
 app = dash.Dash(__name__)
 
