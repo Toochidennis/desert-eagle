@@ -22,7 +22,7 @@ app.layout = html.Div([
     
     # Network Stats (Speed and I/O)
     html.Div([
-         html.H3("Network Speed (1s Interval)"),
+        html.H3("Network Speed (1s Interval)"),
         dcc.Graph(id='network-speed'),
         html.H3("Network I/O (Total Sent/Received)"),
         dcc.Graph(id='network-io')
@@ -73,7 +73,7 @@ def update_dashboard(_):
     network_speed_fig = {
         'data': [
             go.Bar(x=["Upload", "Download"], y=[network_speed['upload_speed'], network_speed['download_speed']])
-        ],
+            ],
         'layout': go.Layout(title="Network Speed (Bytes/sec)", showlegend=False)
     }
 
@@ -93,8 +93,13 @@ def update_dashboard(_):
         process_rows.append(row)
 
     process_table = html.Table([
-        html.Thead(html.Tr([html.Th("PID"), html.Th("Name"), html.Th("User"), html.Th("Status"),
-                            html.Th("CPU %"), html.Th("Memory %")])),
+        html.Thead(html.Tr([
+            html.Th("PID"),
+            html.Th("Name"),
+            html.Th("User"),
+            html.Th("Status"),
+            html.Th("CPU %"),
+            html.Th("Memory %")])),
         html.Tbody(process_rows)
     ])
 

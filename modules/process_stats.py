@@ -36,7 +36,7 @@ def kill_process(pid):
 # if __name__ == "__main__":
 #     # Test the functions
 #     print("All Processes:")
-#     for process in get_all_processes()[:20]:  # Display first 5 processes for brevity
+#     for process in get_all_processes()[:20]:  # Display first 20 processes for brevity
 #         print(process)
 
 #     # test_pid = 1  # Replace with a valid PID to test
