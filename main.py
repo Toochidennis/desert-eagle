@@ -1,110 +1,156 @@
-import dash
-from dash import dcc, html
-from dash.dependencies import Input, Output
+from dash import Dash, html, dcc, callback, Input, Output
+import dash_bootstrap_components as dbc
+import plotly.express as px
 import plotly.graph_objs as go
-import psutil as ps
-from modules.network_stats import get_network_speed, get_network_io, get_active_connections
-from modules.process_stats import get_all_processes
-from modules.system_stats import get_cpu_usage, get_disk_usage, get_disk_io_stats, get_memory_usage, get_per_cpu_usage, get_swap_usage
+
+# from modules.network_stats import get_network_speed, get_network_io, get_active_connections
+# from modules.process_stats import get_all_processes
+# from modules.system_stats import get_cpu_usage, get_disk_usage, get_disk_io_stats, get_memory_usage, get_per_cpu_usage, get_swap_usage
 
 # Initialize app
-app = dash.Dash(__name__)
-
-# App layout
-app.layout = html.Div([
-    html.H1('System Monitoring Dashboard', style={'text-align: center'}),
-    
-    # CPU and meory usage graph
-    html.Div([
-        dcc.Graph(id='cpu-usage'),
-        dcc.Graph(id='memory-usage')
-    ], style={'display': 'flex', 'justify-content': 'space-between'}),
-    
-    # Network Stats (Speed and I/O)
-    html.Div([
-        html.H3("Network Speed (1s Interval)"),
-        dcc.Graph(id='network-speed'),
-        html.H3("Network I/O (Total Sent/Received)"),
-        dcc.Graph(id='network-io')
-    ]),
-    
-     # Active Processes
-    html.Div([
-        html.H3("Active Processes"),
-        html.Table(id='process-table')
-    ])
-])
-
-# Define callbacks for updating the graphs and tables
-@app.callback(
-    [
-        Output('cpu-usage', 'figure'),
-        Output('memory-usage', 'figure'),
-        Output('network-speed', 'figure'),
-        Output('network-io', 'figure'),
-        Output('process-table', 'children'),
-    ],
-    Input('update-interval', 'n_intervals')
+app = Dash(
+    __name__,
+    external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
 )
 
-def update_dashboard(_):
-    # Get system stats
-    cpu_usage = get_cpu_usage()
-    memory_usage = get_memory_usage()
-    
-    network_speed = get_network_speed(interval=1)
-    network_io = get_network_io()
+color_discrete_sequence = [
+    "#0a9396",
+    "#94d2bd",
+    "#e9d8a6",
+    "#ee9b00",
+    "#ca6702",
+    "#bb3e03",
+    "#ae2012",
+]
 
-    processes = get_all_processes()
+SIDEBAR_STYLE = {
+    "position": "fixed",
+    "top": "0",
+    "left": "0",
+    "bottom": "0",
+    "width": "16rem",
+    "padding": "2rem 1rem",
+    "background-color": "#f8f9fa",
+}
 
-    # CPU Usage Graph
-    cpu_fig = {
-        'data': [go.Bar(x=["CPU"], y=[cpu_usage])],
-        'layout': go.Layout(title="CPU Usage (%)", showlegend=False)
-    }
+CONTENT_STYLE = {
+    "margin-left": "18rem",
+    "margin-right": "2rem",
+    "padding": "2rem, 1rem",
+}
 
-    # Memory Usage Graph
-    memory_fig = {
-        'data': [go.Bar(x=["Memory"], y=[memory_usage])],
-        'layout': go.Layout(title="Memory Usage (%)", showlegend=False)
-    }
-
-    # Network Speed Graph
-    network_speed_fig = {
-        'data': [
-            go.Bar(x=["Upload", "Download"], y=[network_speed['upload_speed'], network_speed['download_speed']])
+sidebar = html.Div(
+    [
+        html.Div(
+            [
+                html.Img(
+                    src="https://www.flaticon.com/free-icons/eagle.svg",
+                    style={"margin-right": "10px", "font-size": "24px"},
+                ),
+                html.H2("Desert Eagle", className="display-7"),
             ],
-        'layout': go.Layout(title="Network Speed (Bytes/sec)", showlegend=False)
-    }
+            style={"display": "flex", "align-items": "center"},
+        ),
+        html.Hr(),
+        dbc.Nav(
+            [
+                dbc.NavLink("Home", href="/", active="exact"),
+                dbc.NavLink("Network", href="/network-page", active="exact"),
+            ],
+            vertical=True,
+            pills=True,
+        ),
+    ],
+    style=SIDEBAR_STYLE,
+)
 
-    # Network I/O Graph
-    network_io_fig = {
-        'data': [
-            go.Bar(x=["Bytes Sent", "Bytes Received"], y=[network_io['bytes_sent'], network_io['bytes_received']])
-        ],
-        'layout': go.Layout(title="Network I/O", showlegend=False)
-    }
+content = html.Div(
+    id="page-content",
+    children=[],
+    style=CONTENT_STYLE,
+)
 
-    # Active Processes Table
-    process_rows = []
-    for proc in processes[:10]:  # Display first 10 processes for brevity
-        row = html.Tr([html.Td(proc["pid"]), html.Td(proc["name"]), html.Td(proc["username"]), html.Td(proc["status"]),
-                       html.Td(f"{proc['cpu_percent']}%"), html.Td(f"{proc['memory_percent']}%")])
-        process_rows.append(row)
 
-    process_table = html.Table([
-        html.Thead(html.Tr([
-            html.Th("PID"),
-            html.Th("Name"),
-            html.Th("User"),
-            html.Th("Status"),
-            html.Th("CPU %"),
-            html.Th("Memory %")])),
-        html.Tbody(process_rows)
-    ])
+def get_card_component(title, data):
+    return dbc.Col(
+        dbc.Card(
+            dbc.CardBody(
+                [
+                    html.H4(title),
+                    html.H4(data),
+                ]
+            ),
+            color="white",
+            class_name='shadow-lg bg-dark border-0',
+            style={"textAlign": "center", "margin-bottom": "24px"},
+        ),
+    )
 
-    return cpu_fig, memory_fig, network_speed_fig, network_io_fig, process_table
 
-# Run the app
-if __name__ == '__main__':
+network_page = html.Div(
+    id="network-page",
+    children=[
+        # html.H2(
+        #     "Networking Statistics",
+        #     style={"textAlign": "center", "padding-bottom": "1rem"},
+        # ),
+        dbc.Card(
+            dbc.CardBody( 
+                children=[
+                    dbc.Row(
+                        [
+                            get_card_component(title="Total ports", data="30"),
+                            get_card_component(title="Total ports", data="30"),
+                            get_card_component(title="Total ports", data="30"),
+                            get_card_component(title="Total ports", data="30"),
+                            get_card_component(title="Total ports", data="30"),
+                        ]
+                    ),
+                    dbc.Row(
+                        children=[
+                            get_card_component(title="Total ports", data="30"),
+                            get_card_component(title="Total ports", data="30"),
+                            get_card_component(title="Total ports", data="30"),
+                            get_card_component(title="Total ports", data="30"),
+                            get_card_component(title="Total ports", data="30"),
+                        ]
+                    ),
+                ]
+            ),
+            class_name='shadow-lg bg-light border-0'
+        ),
+        dbc.Row(dbc.Col([
+            html.H4('Connections'),
+            html.Div([
+                dbc.RadioItems(
+                    id='connections-radios',
+                    
+                )
+            ])
+        ]))
+    ],
+    style={"margin-top": "2em"},
+)
+
+
+# App layout
+app.layout = html.Div(
+    [
+        dcc.Location(id="url"),
+        sidebar,
+        content,
+    ]
+)
+
+
+@app.callback(Output("page-content", "children"), [Input("url", "pathname")])
+def render_page_content(pathname):
+    if pathname == "/":
+        pass
+    else:
+        return network_page
+
+
+# main
+if __name__ == "__main__":
     app.run_server(debug=True)
