@@ -1,6 +1,11 @@
 {
     "cSpell.words": [
+        "DGRAM",
+        "gethostname",
         "laddr",
-        "raddr"
+        "percpu",
+        "raddr",
+        "tooch",
+        "veya"
     ]
 }

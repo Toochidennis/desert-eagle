@@ -83,3 +83,97 @@ def update_dashboard(_):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+    
+
+
+def get_page_content(self):
+    card_data = [{"title": "Total ports", "data": "80% "}] * 5
+
+    return html.Div(
+        id="network-page",
+        children=[
+            dbc.Card(
+                dbc.CardBody(
+                    children=[
+                        dbc.Row(
+                            children=[get_card_component(**card) for card in card_data]
+                        ),
+                        dbc.Row(
+                            children=[get_card_component(**card) for card in card_data]
+                        ),
+                    ]
+                ),
+                class_name="shadow-lg bg-light border-0",
+            ),
+            dbc.Row(
+                dbc.Col(
+                    [
+                        html.H4(
+                            "Connections",
+                            style={"margin-top": "2rem"},
+                        ),
+                        html.Div(
+                            dbc.RadioItems(
+                                id="connections-radios",
+                                class_name="btn-group",
+                                input_class_name="btn-check",
+                                label_class_name="btn btn-outline-dark",
+                                label_checked_class_name="active",
+                                options=[
+                                    {"label": "All", "value": "all"},
+                                    {
+                                        "label": "Established",
+                                        "value": "established",
+                                    },
+                                    {"label": "Listening", "value": "listening"},
+                                ],
+                                value="all",
+                            ),
+                            className="radio-group",
+                            style={"margin-top": "2rem"},
+                        ),
+                        dbc.Table(
+                            [
+                                html.Thead(
+                                    html.Tr(
+                                        [
+                                            html.Th("Local address"),
+                                            html.Th("Foreign address"),
+                                            html.Th("Status"),
+                                            html.Th("Type"),
+                                        ]
+                                    )
+                                ),
+                                html.Tbody(
+                                    [
+                                        html.Tr(
+                                            [
+                                                html.Td("Arthur"),
+                                                html.Td("Dent"),
+                                                html.Td("Dent"),
+                                                html.Td("Dent"),
+                                            ]
+                                        ),
+                                        html.Tr(
+                                            [
+                                                html.Td("Arthur"),
+                                                html.Td("Dent"),
+                                                html.Td("Dent"),
+                                                html.Td("Dent"),
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                            ],
+                            bordered=True,
+                            hover=True,
+                            striped=True,
+                            responsive=True,
+                            style={"margin-top": "2rem"},
+                        ),
+                    ]
+                )
+            ),
+        ],
+        style={"margin-top": "2em"},
+    )
