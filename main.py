@@ -2,7 +2,6 @@ from dash import Dash, dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.graph_objs as go
-import psutil
 from utils.network_util import (
     get_chart_component as charts,
     get_table_component as tables,
