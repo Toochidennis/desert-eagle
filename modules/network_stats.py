@@ -76,55 +76,71 @@ def get_private_ip():
     except Exception as e:
         return socket.gethostbyname(socket.gethostname())
 
+
 def get_system_model():
     try:
         if platform.system() == "Windows":
-            # Windows: Use WMIC to get the manufacturer and model
-            manufacturer = subprocess.check_output(["wmic", "computersystem", "get", "manufacturer"], universal_newlines=True).splitlines()[1].strip()
-            model = subprocess.check_output(["wmic", "computersystem", "get", "model"], universal_newlines=True).splitlines()[1].strip()
-            return f"{manufacturer} {model}"
+            # Windows: Use WMIC to get model
+            model = subprocess.run(
+                ["wmic", "computersystem", "get", "model"],
+                capture_output=True,
+                text=True,
+            )
+            return model.stdout.split("\n")[2].strip()
         elif platform.system() == "Linux":
             # Linux: Read from the DMI data
-            manufacturer = subprocess.check_output("cat /sys/class/dmi/id/sys_vendor", shell=True, universal_newlines=True).strip()
-            model = subprocess.check_output("cat /sys/class/dmi/id/product_name", shell=True, universal_newlines=True).strip()
-            return f"{manufacturer} {model}"
+            # manufacturer = subprocess.run("cat /sys/class/dmi/id/sys_vendor", shell=True, capture_output=True, text=True)
+            model = subprocess.run(
+                "cat /sys/class/dmi/id/product_name",
+                shell=True,
+                capture_output=True,
+                text=True,
+            )
+            return model.stdout.split("\n")[2].strip()
         elif platform.system() == "Darwin":
             # macOS: Use system_profiler for details
-            model = subprocess.check_output("sysctl -n hw.model", shell=True, universal_newlines=True).strip()
+            model = subprocess.check_output(
+                "sysctl -n hw.model", shell=True, universal_newlines=True
+            ).strip()
             return f"Apple {model}"
         else:
             return "Unsupported OS"
     except Exception as e:
+        print(str(e))
         return "Unknown"
 
 
 def get_device_info():
-    user_info = ps.users()
-    account_name = user_info[0].name if user_info else "Unknown"
-
     # Device Name
     device_name = socket.gethostname()
 
     # Battery Percentage
     battery = ps.sensors_battery()
-    battery_percent = battery.percent if battery else "No battery detected"
+    battery_percent = battery.percent if battery else "No"
 
     # IP Address
     private_ip = get_private_ip()
     
+    # cpu frequency
+    freq = ps.cpu_freq()
+    max = f"{freq.max / 1000:.2f}"
+    current = f"{freq.current / 1000:.2f}"
+    cpu_used = f"{current}/{max} GHz"
+
     # Get system model and OS information
     system_arch = platform.uname().machine  # For general architecture (e.g., x86_64)
-    system_name = platform.uname().system    # OS name
-    os_version = platform.version()          # OS version
-    os_release = platform.release()          # OS release
-    node_name = platform.node() 
+    system_name = platform.uname().system  # OS name
+    os_release = platform.release()
     system_model = get_system_model()
 
     return {
-        "username": system_model,
+        "model": system_model,
         "device_name": device_name,
         "ip_address": private_ip,
         "battery_percentage": battery_percent,
+        "os_name": f"{system_name} {os_release}",
+        "os_arch": system_arch,
+        "cpu_used": cpu_used,
     }
 
 

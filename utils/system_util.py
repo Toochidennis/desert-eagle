@@ -12,22 +12,20 @@ CARD_DATA = [
     {
         "title": "CPU",
         "id": "cpu-usage",
+        "sub_id":"cpu-used",
         "icon_name": "bi bi-cpu",
     },
     {
-      "title": "MEMORY",
-       "id": "memory-usage",
+        "title": "MEMORY",
+        "id": "memory-usage",
+         "sub_id":"memory-used",
         "icon_name": "bi bi-memory",
     },
     {
         "title": "DISK",
-         "id": "disk-usage",
+        "id": "disk-usage",
+        "sub_id":"disk-used",
         "icon_name": "bi bi-hdd",
-    },
-    {
-        "title": "CPU",
-        "id": "cpu-usage1",
-        "icon_name": "bi bi-cpu",
     },
 ]
 
@@ -65,17 +63,17 @@ def get_card_item(id, title):
     return html.Div(
         [
             html.H4(
-                title=title,
+                title,
                 style={
                     "fontSize": "16px",
                     "color": "#969696",
                 },
             ),
             html.H4(
-                
+                id=id,
                 style={
                     "fontSize": "16px",
-                    "color": "#969696",
+                    "color": "#4469F9",
                 },
             ),
         ],
@@ -88,7 +86,7 @@ def get_card_item(id, title):
     )
 
 
-def get_card_component(title, id, icon_name):
+def get_card_component(title, id, sub_id, icon_name):
     return dbc.Col(
         dbc.Card(
             dbc.CardBody(
@@ -124,8 +122,7 @@ def get_card_component(title, id, icon_name):
                             "fontWeight": "bold",
                         },
                     ),
-                    get_card_item("used", "Used",),
-                    get_card_item("free", "Free",),
+                    get_card_item(sub_id, "Used"),
                 ]
             ),
             class_name="border-0 shadow-lg",
@@ -138,7 +135,19 @@ def info_item(title, id):
     return html.Div(
         [
             html.H3(title, style={"fontSize": "16px"}),
-            html.H3(id=id, style={"fontSize": "20px"}),
+            html.H3(id=id, style={"fontSize": "18px"}),
+        ],
+    )
+
+
+def card_item(title1, id1, title2, id2):
+    return html.Div(
+        [
+            info_item(title1, id1),
+            dbc.Col(
+                info_item(title2, id2),
+                style={"marginTop":"1rem"}
+            )
         ],
     )
 
@@ -147,31 +156,39 @@ def get_info_card():
     return dbc.Col(
         dbc.Card(
             dbc.CardBody(
-                [
-                    html.Div(
-                        [
-                            info_item("USERNAME:", "username"),
-                            info_item("DEVICE NAME:", "device-name"),
-                        ],
-                        style={
-                            "display": "flex",
-                            "justifyContent": "space-between",
-                            "alignItems": "center", 
-                        },
-                    ),
-                    html.Div(
-                        [
-                            info_item("IP ADDRESS:", "ip-address"),
-                            info_item("BATTERY:", "battery-percentage"),
-                        ],
-                        style={
-                            "marginTop": "1rem",
-                            "display": "flex",
-                            "justifyContent": "space-between",
-                            "alignItems": "center",
-                        },
-                    ),
-                ]
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            card_item(
+                                title1="MODEL:",
+                                id1="model",
+                                title2="DEVICE NAME:",
+                                id2="device-name",
+                            ),
+                            width=5,
+                        ),
+                        dbc.Col(
+                            card_item(
+                                title1="IP ADDRESS:",
+                                id1="ip-address",
+                                title2="BATTERY:",
+                                id2="battery-percentage",
+                            ),
+                            width=4,
+                        ),
+                        # Second row (two card items side by side)
+                        dbc.Col(
+                            card_item(
+                                title1="OS NAME:",
+                                id1="os-name",
+                                title2="OS ARCH:",
+                                id2="os-arch",
+                            ),
+                            width=3,
+                        ),
+                    ],
+                    className="g-4"
+                )
             ),
             class_name="border-0 shadow-lg",
             style=CARD_STYLE,

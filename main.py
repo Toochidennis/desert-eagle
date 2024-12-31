@@ -40,7 +40,7 @@ content = html.Div(
         tables(),
         dcc.Interval(
             id="interval-component",
-            interval=1000,  # Refresh every 5000ms (5 seconds)
+            interval=5000,  # Refresh every 5000ms (5 seconds)
             n_intervals=0,
         ),
     ],
@@ -58,13 +58,18 @@ app.layout = dbc.Container(
 
 @app.callback(
     [
-        Output("username", "children"),
+        Output("model", "children"),
         Output("device-name", "children"),
         Output("ip-address", "children"),
         Output("battery-percentage", "children"),
+        Output("os-name", "children"),
+        Output("os-arch", "children"),
         Output("cpu-usage", "children"),
         Output("memory-usage", "children"),
         Output("disk-usage", "children"),
+        Output("cpu-used", "children"),
+        Output("memory-used", "children"),
+        Output("disk-used", "children"),
         # Output('disk-usage', 'title'),
         # Output('network-io', 'figure'),
         # Output('process-table', 'children'),
@@ -72,20 +77,25 @@ app.layout = dbc.Container(
     [Input("interval-component", "n_intervals")],
 )
 def render_page_content(n_intervals):
-     # Fetch data
+    # Fetch data
     device_info_data = device_info()
     cpu_usage = get_cpu_usage()
     memory_usage = get_memory_usage()
     disk_usage = get_disk_usage()
-    
+
     return [
-        device_info_data["username"],
+        device_info_data["model"],
         device_info_data["device_name"],
         device_info_data["ip_address"],
         f"{device_info_data['battery_percentage']}%",
+        device_info_data["os_name"],
+        device_info_data["os_arch"],
         f"{cpu_usage}%",
         f"{memory_usage['percent']}%",
-        f"{disk_usage['percent']}%"
+        f"{disk_usage['percent']}%",
+        device_info_data["cpu_used"],
+        f"{memory_usage['used'] / (1024*1024*1024):.2f}/{memory_usage['total'] / (1024*1024*1024):.2f} GB",
+        f"{disk_usage['used'] / (1024*1024*1024):.2f}/{disk_usage['total'] / (1024*1024*1024):.2f} GB",
     ]
 
 
