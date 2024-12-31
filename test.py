@@ -62,8 +62,9 @@ def update_dashboard(_):
     # Active Processes Table
     process_rows = []
     for proc in processes[:10]:  # Display first 10 processes for brevity
-        row = html.Tr([html.Td(proc["pid"]), html.Td(proc["name"]), html.Td(proc["username"]), html.Td(proc["status"]),
-                       html.Td(f"{proc['cpu_percent']}%"), html.Td(f"{proc['memory_percent']}%")])
+        row = html.Tr(
+            [html.Td(proc["pid"]), html.Td(proc["name"]), html.Td(proc["username"]), html.Td(proc["status"]),
+                    html.Td(f"{proc['cpu_percent']}%"), html.Td(f"{proc['memory_percent']}%")])
         process_rows.append(row)
 
     process_table = html.Table([
@@ -73,7 +74,7 @@ def update_dashboard(_):
             html.Th("User"),
             html.Th("Status"),
             html.Th("CPU %"),
-            html.Th("Memory %")])),
+            html.Th("Memory %"),],),),
         html.Tbody(process_rows)
     ])
 
@@ -83,7 +84,6 @@ def update_dashboard(_):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-    
 
 
 def get_page_content(self):

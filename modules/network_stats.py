@@ -52,12 +52,8 @@ def get_active_connections():
     for conn in connections:
         active_connections.append(
             {
-                "local_address": (
-                    f"{conn.laddr.ip}:{conn.laddr.port}" if conn.laddr else None
-                ),
-                "remote_address": (
-                    f"{conn.raddr.ip}:{conn.raddr.port}" if conn.raddr else None
-                ),
+                "local_address": f"{conn.laddr.ip}:{conn.laddr.port}" if conn.laddr else None,
+                "remote_address": f"{conn.raddr.ip}:{conn.raddr.port}" if conn.raddr else None,
                 "status": conn.status,
                 "type": "TCP" if conn.type == socket.SOCK_STREAM else "UDP",
             }

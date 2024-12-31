@@ -44,8 +44,12 @@ def get_chart_component():
                 title="Network I/O",
             ),
             get_row_component(
-                id="memory-graph",
+                id="memory-pie",
                 title="Memory Usage",
+            ),
+            get_row_component(
+                id="disk-pie",
+                title="Disk Usage",
             ),
         ],
     )
@@ -64,9 +68,7 @@ def get_connection_table():
                     ]
                 )
             ),
-            html.Tbody(
-                id="connection-table"
-            ),
+            html.Tbody(id="connection-table"),
         ],
         bordered=True,
         hover=True,
@@ -91,9 +93,7 @@ def get_process_table():
                     ]
                 )
             ),
-            html.Tbody(
-                id="process-table"
-            ),
+            html.Tbody(id="process-table"),
         ],
         bordered=True,
         hover=True,
@@ -114,12 +114,12 @@ def get_table_item(title, content):
                         "color": "#26325D",
                     },
                 ),
-               html.Div(
+                html.Div(
                     content,
                     style={
                         "maxHeight": "400px",  # Set the height of the scrollable area
                         "overflowY": "auto",  # Enable vertical scrolling
-                        "overflowX": "auto",  # Enable horizontal scrolling (if needed)
+                        # "overflowX": "auto",  # Enable horizontal scrolling (if needed)
                     },
                 ),
             ]
@@ -150,6 +150,6 @@ def get_table_component():
             "display": "flex",
             "justifyContent": "space-between",
             "marginTop": "2rem",
-            "width": "100%"
+            "width": "100%",
         },
     )

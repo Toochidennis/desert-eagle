@@ -12,19 +12,19 @@ CARD_DATA = [
     {
         "title": "CPU",
         "id": "cpu-usage",
-        "sub_id":"cpu-used",
+        "sub_id": "cpu-used",
         "icon_name": "bi bi-cpu",
     },
     {
         "title": "MEMORY",
         "id": "memory-usage",
-         "sub_id":"memory-used",
+        "sub_id": "memory-used",
         "icon_name": "bi bi-memory",
     },
     {
         "title": "DISK",
         "id": "disk-usage",
-        "sub_id":"disk-used",
+        "sub_id": "disk-used",
         "icon_name": "bi bi-hdd",
     },
 ]
@@ -146,8 +146,8 @@ def card_item(title1, id1, title2, id2):
             info_item(title1, id1),
             dbc.Col(
                 info_item(title2, id2),
-                style={"marginTop":"1rem"}
-            )
+                style={"marginTop": "1rem"},
+            ),
         ],
     )
 
@@ -176,7 +176,6 @@ def get_info_card():
                             ),
                             width=4,
                         ),
-                        # Second row (two card items side by side)
                         dbc.Col(
                             card_item(
                                 title1="OS NAME:",
@@ -187,7 +186,7 @@ def get_info_card():
                             width=3,
                         ),
                     ],
-                    className="g-4"
+                    className="g-4",
                 )
             ),
             class_name="border-0 shadow-lg",
