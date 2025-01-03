@@ -5,7 +5,7 @@ import platform
 import subprocess
 
 
-def get_network_io():
+async def get_network_io():
     """
     Get total network I/O (bytes sent and received).
     :return: Dictionary with total bytes sent and received.
@@ -20,7 +20,7 @@ def get_network_io():
     }
 
 
-def get_network_speed(interval=1):
+async def get_network_speed(interval=1):
     """
     Calculate network upload and download speeds.
     :param interval: Time interval in seconds to measure speed.
@@ -40,26 +40,26 @@ def get_network_speed(interval=1):
     }
 
 
-def get_active_connections():
+async def get_active_connections():
     """
     Get details of active network connections.
     :return: List of dictionaries containing connection details.
     """
-
-    connections = ps.net_connections()
-    active_connections = []
-
-    for conn in connections:
-        active_connections.append(
-            {
-                "local_address": f"{conn.laddr.ip}:{conn.laddr.port}" if conn.laddr else None,
-                "remote_address": f"{conn.raddr.ip}:{conn.raddr.port}" if conn.raddr else None,
-                "status": conn.status,
-                "type": "TCP" if conn.type == socket.SOCK_STREAM else "UDP",
-            }
-        )
-
-    return active_connections
+    connections = ps.net_connections(kind="inet")  # Limit to internet connections (TCP/UDP)
+    return [
+        {
+            "local_address": (
+                f"{conn.laddr.ip}:{conn.laddr.port}" if conn.laddr else None
+            ),
+            "remote_address": (
+                f"{conn.raddr.ip}:{conn.raddr.port}" if conn.raddr else None
+            ),
+            "status": conn.status,
+            "type": "TCP" if conn.type == socket.SOCK_STREAM else "UDP",
+        }
+        for conn in connections
+        if conn.status not in {"NONE"}  # Exclude irrelevant connections
+    ]
 
 
 def get_private_ip():
@@ -112,11 +112,11 @@ def get_device_info():
 
     # Battery Percentage
     battery = ps.sensors_battery()
-    battery_percent = battery.percent if battery else "No"
+    battery_percent = battery.percent if battery else None
 
     # IP Address
     private_ip = get_private_ip()
-    
+
     # cpu frequency
     freq = ps.cpu_freq()
     max = f"{freq.max / 1000:.2f}"

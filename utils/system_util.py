@@ -1,20 +1,19 @@
 from dash import html
 import dash_bootstrap_components as dbc
 
-# from modules.network_stats import get_network_speed, get_network_io, get_active_connections
+# Common styles
 CARD_STYLE = {
     "textAlign": "start",
-    "backgroundColor": "#FFFFFF",
     "borderRadius": "16px",
+    "color": "#FFFFFF"
+}
+
+LABEL_STYLE = {
+    "fontSize": "16px", "color": "#969696"
 }
 
 CARD_DATA = [
-    {
-        "title": "CPU",
-        "id": "cpu-usage",
-        "sub_id": "cpu-used",
-        "icon_name": "bi bi-cpu",
-    },
+    {"title": "CPU", "id": "cpu-usage", "sub_id": "cpu-used", "icon_name": "bi bi-cpu",},
     {
         "title": "MEMORY",
         "id": "memory-usage",
@@ -29,53 +28,40 @@ CARD_DATA = [
     },
 ]
 
-app_bar = dbc.Row(
-    [
-        dbc.Col(
-            html.Div(
-                [
-                    html.Img(
-                        src=r"assets/veya.jpg",
-                        width="50px",
-                        style={
-                            "marginRight": "10px",
-                        },
-                    ),
-                    html.H2("Desert Eagle", className="display-7"),
-                ],
-                style={"display": "flex", "alignItems": "center"},
+
+# App Bar Component
+def create_app_bar():
+    return dbc.Row(
+        [
+            dbc.Col(
+                html.Div(
+                    [
+                        html.Img(
+                            src=r"assets/veya.jpg",
+                            width="50px",
+                            style={"marginRight": "10px"},
+                        ),
+                        html.H2("Desert Eagle", className="display-7", style={"color": "#ADD8E6"},),
+                    ],
+                    style={"display": "flex", "alignItems": "center"},
+                ),
+                width="auto",
             ),
-            width="auto",
-        ),
-        dbc.Col(
-            html.H3(
-                "System Monitoring Dashboard",
-                style={"marginLeft": "10rem"},
+            dbc.Col(
+                html.H3("System Monitoring Dashboard", style={"marginLeft": "10rem", "color": "#ADD8E6",},),
             ),
-        ),
-    ],
-    justify="between",
-    style={"padding": "1rem 2rem"},
-)
+        ],
+        justify="between",
+        style={"padding": "1rem 2rem"},
+    )
 
 
-def get_card_item(id, title):
+# Card Component Utilities
+def create_card_item(id, label):
     return html.Div(
         [
-            html.H4(
-                title,
-                style={
-                    "fontSize": "16px",
-                    "color": "#969696",
-                },
-            ),
-            html.H4(
-                id=id,
-                style={
-                    "fontSize": "16px",
-                    "color": "#4469F9",
-                },
-            ),
+            html.H4(label, style={"fontSize": "16px", "color": "#969696"}),
+            html.H4(id=id, style={"fontSize": "16px", "color": "#ADD8E6"}),
         ],
         style={
             "display": "flex",
@@ -86,7 +72,7 @@ def get_card_item(id, title):
     )
 
 
-def get_card_component(title, id, sub_id, icon_name):
+def create_card(title, id, sub_id, icon_name):
     return dbc.Col(
         dbc.Card(
             dbc.CardBody(
@@ -94,18 +80,9 @@ def get_card_component(title, id, sub_id, icon_name):
                     html.Div(
                         [
                             html.H4(
-                                title,
-                                style={
-                                    "fontSize": "18px",
-                                    "color": "#969696",
-                                },
+                                title, style={"fontSize": "18px", "color": "#969696"}
                             ),
-                            html.I(
-                                className=icon_name,
-                                style={
-                                    "fontSize": "1.5rem",
-                                },
-                            ),
+                            html.I(className=icon_name, style={"fontSize": "1.5rem", "color": "#ADD8E6",},),
                         ],
                         style={
                             "display": "flex",
@@ -117,71 +94,72 @@ def get_card_component(title, id, sub_id, icon_name):
                     html.H3(
                         id=id,
                         style={
-                            "fontSize": "30px",
-                            "color": "#26325D",
+                            "fontSize": "40px",
+                            "color": "#ADD8E6",
                             "fontWeight": "bold",
                         },
                     ),
-                    get_card_item(sub_id, "Used"),
+                    create_card_item(sub_id, "Used"),
                 ]
             ),
-            class_name="border-0 shadow-lg",
+            className="border-0 shadow-lg",
             style=CARD_STYLE,
         ),
     )
 
 
-def info_item(title, id):
+# Information Card Utilities
+def create_info_item(label, id):
     return html.Div(
         [
-            html.H3(title, style={"fontSize": "16px"}),
-            html.H3(id=id, style={"fontSize": "18px"}),
-        ],
+            html.H3(label, style={"fontSize": "16px", "color": "#ADD8E6"}),
+            html.H3(id=id, style={"fontSize": "18px", "color": "#FFFFFF"}),
+        ]
     )
 
 
-def card_item(title1, id1, title2, id2):
+def create_info_pair(label1, id1, label2, id2):
     return html.Div(
         [
-            info_item(title1, id1),
+            create_info_item(label1, id1),
             dbc.Col(
-                info_item(title2, id2),
+                create_info_item(label2, id2),
                 style={"marginTop": "1rem"},
             ),
-        ],
+        ]
     )
 
 
-def get_info_card():
+def create_info_card():
     return dbc.Col(
         dbc.Card(
             dbc.CardBody(
                 dbc.Row(
                     [
                         dbc.Col(
-                            card_item(
-                                title1="MODEL:",
-                                id1="model",
-                                title2="DEVICE NAME:",
-                                id2="device-name",
+                            create_info_pair(
+                                "MODEL:",
+                                "model",
+                                "DEVICE NAME:",
+                                "device-name",
                             ),
                             width=5,
                         ),
                         dbc.Col(
-                            card_item(
-                                title1="IP ADDRESS:",
-                                id1="ip-address",
-                                title2="BATTERY:",
-                                id2="battery-percentage",
+                            create_info_pair(
+                                "IP ADDRESS:",
+                                "ip-address",
+                                "BATTERY:",
+                                "battery-percentage",
                             ),
                             width=4,
                         ),
                         dbc.Col(
-                            card_item(
-                                title1="OS NAME:",
-                                id1="os-name",
-                                title2="OS ARCH:",
-                                id2="os-arch",
+                            create_info_pair(
+                                "OS NAME:",
+                                "os-name",
+                                "OS ARCH:",
+                                "os-arch",
                             ),
                             width=3,
                         ),
@@ -189,19 +167,19 @@ def get_info_card():
                     className="g-4",
                 )
             ),
-            class_name="border-0 shadow-lg",
+            className="border-0 shadow-lg",
             style=CARD_STYLE,
         ),
-        style={
-            "flex": "2",
-        },
+        style={"flex": "2"},
     )
 
 
-cards = dbc.Row(
-    [
-        get_info_card(),
-        *[get_card_component(**card) for card in CARD_DATA],
-    ],
-    style={"paddingBottom": "2rem"},
-)
+# Main Cards Component
+def create_dashboard_cards():
+    return dbc.Row(
+        [
+            create_info_card(),
+            *[create_card(**card) for card in CARD_DATA],
+        ],
+        style={"paddingBottom": "2rem"},
+    )

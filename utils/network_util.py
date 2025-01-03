@@ -3,25 +3,29 @@ import dash_bootstrap_components as dbc
 
 CARD_STYLE = {
     "textAlign": "start",
-    "backgroundColor": "#FFFFFF",
-    "borderRadius": "14px",
+    "borderRadius": "16px",
+}
+CHART_TITLE_STYLE = {
+    "fontSize": "20px",
+    "color": "#ADD8E6",
+}
+TABLE_HEADER_STYLE = {
+    "color": "#ADD8E6",  # Light blue header text
 }
 
-
-def get_row_component(id, title):
+def create_chart_card(chart_id):
+    """
+    Create a reusable card component for displaying charts.
+    :param chart_id: ID for the chart's dcc.Graph component.
+    :param title: Title of the chart.
+    :return: dbc.Col containing the chart card.
+    """
     return dbc.Col(
         dbc.Card(
             dbc.CardBody(
                 [
-                    html.H3(
-                        title,
-                        style={
-                            "fontSize": "18px",
-                            "color": "#26325D",
-                        },
-                    ),
                     dcc.Graph(
-                        id=id,
+                        id=chart_id,
                         style={"height": "300px"},
                     ),
                 ]
@@ -32,37 +36,33 @@ def get_row_component(id, title):
     )
 
 
-def get_chart_component():
+def generate_chart_section():
+    """
+    Create a row of chart components.
+    :return: dbc.Row containing chart cards.
+    """
     return dbc.Row(
         [
-            get_row_component(
-                id="network-speed",
-                title="Network Speed (Bytes/sec)",
-            ),
-            get_row_component(
-                id="network-io",
-                title="Network I/O",
-            ),
-            get_row_component(
-                id="memory-pie",
-                title="Memory Usage",
-            ),
-            get_row_component(
-                id="disk-pie",
-                title="Disk Usage",
-            ),
+            create_chart_card("network-speed"),
+            create_chart_card("network-io"),
+            create_chart_card("memory-pie"),
+            create_chart_card("disk-pie"),
         ],
     )
 
 
-def get_connection_table():
+def create_connection_table():
+    """
+    Create a table for displaying network connections.
+    :return: dbc.Table component for connections.
+    """
     return dbc.Table(
         [
             html.Thead(
                 html.Tr(
                     [
-                        html.Th("Local address"),
-                        html.Th("Foreign address"),
+                        html.Th("Local Address"),
+                        html.Th("Foreign Address"),
                         html.Th("Status"),
                         html.Th("Type"),
                     ]
@@ -74,11 +74,14 @@ def get_connection_table():
         hover=True,
         striped=True,
         responsive=True,
-        # style={"margin-top": "2rem"},
     )
 
 
-def get_process_table():
+def create_process_table():
+    """
+    Create a table for displaying process details.
+    :return: dbc.Table component for processes.
+    """
     return dbc.Table(
         [
             html.Thead(
@@ -99,27 +102,29 @@ def get_process_table():
         hover=True,
         striped=True,
         responsive=True,
-        # style={"margin-top": "2rem"},
     )
 
 
-def get_table_item(title, content):
+def create_table_card(title, content):
+    """
+    Create a reusable card component for tables.
+    :param title: Title of the card.
+    :param content: Content to display inside the card.
+    :return: dbc.Card containing the table.
+    """
     return dbc.Card(
         dbc.CardBody(
             [
                 html.H3(
                     title,
-                    style={
-                        "fontSize": "18px",
-                        "color": "#26325D",
-                    },
+                    style=CHART_TITLE_STYLE
                 ),
                 html.Div(
                     content,
                     style={
-                        "maxHeight": "400px",  # Set the height of the scrollable area
-                        "overflowY": "auto",  # Enable vertical scrolling
-                        # "overflowX": "auto",  # Enable horizontal scrolling (if needed)
+                        "marginTop": "1rem",
+                        "maxHeight": "400px",
+                        "overflowY": "auto",
                     },
                 ),
             ]
@@ -129,20 +134,24 @@ def get_table_item(title, content):
     )
 
 
-def get_table_component():
+def generate_table_section():
+    """
+    Create a section containing the process and connection tables.
+    :return: html.Div containing table cards.
+    """
     return html.Div(
         [
             html.Div(
-                get_table_item("Processes", get_process_table()),
+                create_table_card("Processes", create_process_table()),
                 style={
-                    "flex": "1.5",  # Allocate more space to the process table
-                    "marginRight": "1rem",  # Add spacing between the tables
+                    "flex": "1.5",
+                    "marginRight": "1rem",
                 },
             ),
             html.Div(
-                get_table_item("Connections", get_connection_table()),
+                create_table_card("Connections", create_connection_table()),
                 style={
-                    "flex": "1",  # Allocate less space to the connection table
+                    "flex": "1",
                 },
             ),
         ],

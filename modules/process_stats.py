@@ -1,6 +1,7 @@
 import psutil as ps
 
-def get_all_processes():
+
+async def get_all_processes():
     """
     Get a list of all running processes with details.
     :return: List of dictionaries containing process details.
@@ -9,7 +10,7 @@ def get_all_processes():
     for proc in ps.process_iter(attrs=['pid', 'name', 'username', 'status']):
         try:
             process_info = proc.info
-            process_info["cpu_percent"] = proc.cpu_percent(interval=0.1)  # CPU usage percentage
+            process_info["cpu_percent"] = proc.cpu_percent(interval=0)  # CPU usage percentage
             process_info["memory_percent"] = proc.memory_percent()  # Memory usage percentage
             processes.append(process_info)
         except (ps.NoSuchProcess, ps.AccessDenied):

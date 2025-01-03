@@ -4,9 +4,16 @@
         "DGRAM",
         "gethostname",
         "laddr",
+        "Mbps",
         "percpu",
         "raddr",
+        "showarrow",
+        "showlegend",
+        "tickfont",
         "tooch",
-        "veya"
+        "veya",
+        "xaxis",
+        "yaxis",
+        "yref"
     ]
 }
