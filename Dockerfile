@@ -10,11 +10,11 @@ COPY . .
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Set environment variables
-ENV DEBUG=False
+# Expose the port the app will run on
+EXPOSE 8080
 
-# Expose the port
-EXPOSE 5000
+# Set the environment variable for Heroku
+ENV PORT=8080
 
-# Run the application
-CMD ["python", "app.py"]
+# Use Gunicorn to serve the app in production
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:$PORT"]
