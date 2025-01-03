@@ -3,8 +3,6 @@ __pycache__/
 modules/__pycache__/
 utils/__pycache__/
 test.py
-desert-key
-desert-key.pub
 *.py[cod]
 *$py.class
 

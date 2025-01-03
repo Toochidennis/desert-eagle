@@ -1,9 +1,9 @@
 from dash import Dash, dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
-import plotly.graph_objs as go
 import asyncio
 import threading
+import os
 from utils.network_util import generate_chart_section, generate_table_section
 from modules.system_stats import (
     get_cpu_usage,
@@ -318,7 +318,8 @@ def render_page_content(n_intervals):
         connections_rows,
     ]
 
+port = int(os.environ.get('PORT', 8080))
 
 # main
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(debug=False, host='0.0.0.0', port=port)
