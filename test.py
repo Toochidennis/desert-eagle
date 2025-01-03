@@ -2,7 +2,7 @@ from dash import Dash, html, dcc, callback, Input, Output
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
-from main import fetch_data_sync
+from app import fetch_data_sync
 import time
 
 

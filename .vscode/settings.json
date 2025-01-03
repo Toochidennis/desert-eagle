@@ -3,6 +3,7 @@
         "computersystem",
         "DGRAM",
         "gethostname",
+        "gunicorn",
         "laddr",
         "Mbps",
         "percpu",
