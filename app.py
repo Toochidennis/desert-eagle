@@ -1,9 +1,6 @@
 from dash import Dash, dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
-import asyncio
-import threading
-import os
 from utils.network_util import generate_chart_section, generate_table_section
 from modules.system_stats import (
     get_cpu_usage,
@@ -39,7 +36,7 @@ content = html.Div(
         generate_table_section(),
         dcc.Interval(
             id="interval-component",
-            interval=10000,  # Refresh every 10000ms (10 seconds)
+            interval=7000,  # Refresh every 7000ms (7 seconds)
             n_intervals=0,
         ),
     ],
@@ -118,9 +115,10 @@ def update_dark_theme_graph(fig, showlegend=False):
     return fig
 
 
-async def fetch_all_data():
+def fetch_all_data():
     try:
-        return await asyncio.gather(
+        return (
+            device_info(),
             get_cpu_usage(),
             get_memory_usage(),
             get_disk_usage(),
@@ -134,16 +132,7 @@ async def fetch_all_data():
         return [None] * 7
 
 
-# Create an asyncio event loop to avoid repeatedly calling asyncio.run()
-async_loop = asyncio.new_event_loop()
-threading.Thread(target=async_loop.run_forever, daemon=True).start()
-
-
-def fetch_data_sync():
-    return asyncio.run_coroutine_threadsafe(fetch_all_data(), async_loop).result()
-
-
-# Callback to update dashboard data every 10 seconds
+# Callback to update dashboard data every 7 seconds
 @app.callback(
     [
         Output("model", "children"),
@@ -174,6 +163,7 @@ def render_page_content(n_intervals):
     """
     # Collect data from system metrics functions
     (
+        device_info_data,
         cpu_usage,
         memory_data,
         disk_data,
@@ -181,9 +171,9 @@ def render_page_content(n_intervals):
         network_io,
         connections,
         processes,
-    ) = fetch_data_sync()
+    ) = fetch_all_data()
 
-    device_info_data = device_info()
+    device_info_data = device_info_data
     model = device_info_data.get("model", "N/A")
     device_name = device_info_data.get("device_name", "Unknown")
     ip_address = device_info_data.get("ip_address", "0.0.0.0")
@@ -318,7 +308,7 @@ def render_page_content(n_intervals):
         connections_rows,
     ]
 
-server = app.server
+#server = app.server
 # main
 if __name__ == "__main__":
-    app.run_server(debug=True, host="0.0.0.0", port=8080)
+   app.run_server(debug=False)

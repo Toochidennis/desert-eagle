@@ -2,7 +2,7 @@ from dash import Dash, html, dcc, callback, Input, Output
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
-from app import fetch_data_sync
+from app import fetch_all_data
 import time
 
 
@@ -11,6 +11,7 @@ if __name__ == '__main__':
 
     # Your code block
     (
+        device,
         cpu_usage,
         memory_data,
         disk_data,
@@ -19,7 +20,7 @@ if __name__ == '__main__':
         connections,
         processes,
 
-    ) = fetch_data_sync()
+    ) = fetch_all_data()
 
     end_time = time.perf_counter()  # End the timer
 

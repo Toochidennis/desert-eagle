@@ -1,7 +1,7 @@
 import psutil as ps
 
 
-async def get_all_processes():
+def get_all_processes():
     """
     Get a list of all running processes with details.
     :return: List of dictionaries containing process details.

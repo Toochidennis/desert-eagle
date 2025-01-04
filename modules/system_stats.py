@@ -1,7 +1,7 @@
 import psutil as ps
 
 
-async def get_cpu_usage():
+def get_cpu_usage():
     """
     Get the percentage of CPU usage.
     :return: CPU usage as a percentage.
@@ -9,7 +9,7 @@ async def get_cpu_usage():
     return ps.cpu_percent(interval=1)
 
 
-async def get_per_cpu_usage():
+def get_per_cpu_usage():
     """
     Get CPU usage per core.
     :return: List of CPU usage percentages for each core.
@@ -17,7 +17,7 @@ async def get_per_cpu_usage():
     return ps.cpu_percent(interval=1, percpu=True)
 
 
-async def get_memory_usage():
+def get_memory_usage():
     """
     Get memory usage details.
     :return: Dictionary with total, used, and percentage of memory usage.
@@ -32,7 +32,7 @@ async def get_memory_usage():
     }
 
 
-async def get_swap_usage():
+def get_swap_usage():
     """
     Get swap memory usage details.
     :return: Dictionary with total, used, and percentage of swap usage.
@@ -47,7 +47,7 @@ async def get_swap_usage():
     }
 
 
-async def get_disk_usage(partition="/"):
+def get_disk_usage(partition="/"):
     """
     Get disk usage details for a specific partition.
     :param partition: Partition to check (default: '/').
@@ -63,7 +63,7 @@ async def get_disk_usage(partition="/"):
     }
 
 
-async def get_disk_io_stats():
+def get_disk_io_stats():
     """
     Get disk I/O statistics (read and write operations).
     :return: Dictionary with read and write stats in bytes.

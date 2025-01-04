@@ -5,7 +5,7 @@ import platform
 import subprocess
 
 
-async def get_network_io():
+def get_network_io():
     """
     Get total network I/O (bytes sent and received).
     :return: Dictionary with total bytes sent and received.
@@ -20,7 +20,7 @@ async def get_network_io():
     }
 
 
-async def get_network_speed(interval=1):
+def get_network_speed(interval=1):
     """
     Calculate network upload and download speeds.
     :param interval: Time interval in seconds to measure speed.
@@ -40,7 +40,7 @@ async def get_network_speed(interval=1):
     }
 
 
-async def get_active_connections():
+def get_active_connections():
     """
     Get details of active network connections.
     :return: List of dictionaries containing connection details.
