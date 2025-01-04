@@ -318,8 +318,6 @@ def render_page_content(n_intervals):
         connections_rows,
     ]
 
-port = int(os.environ.get('PORT', 5000))
-
 # main
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=port)
+    app.run_server(debug=False)
