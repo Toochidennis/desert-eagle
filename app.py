@@ -318,6 +318,7 @@ def render_page_content(n_intervals):
         connections_rows,
     ]
 
+server = app.server
 # main
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(debug=True, host="0.0.0.0", port=8080)
