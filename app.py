@@ -14,7 +14,7 @@ from modules.network_stats import (
     get_device_info as device_info,
 )
 from modules.process_stats import get_all_processes
-from utils.system_util import create_dashboard_cards, create_app_bar
+from utils.system_util import create_dashboard_cards, create_app_bar, create_footer
 
 
 BYTES_IN_GB = 1024 * 1024 * 1024
@@ -34,6 +34,7 @@ content = html.Div(
         create_dashboard_cards(),
         generate_chart_section(),
         generate_table_section(),
+        create_footer(),
         dcc.Interval(
             id="interval-component",
             interval=7000,  # Refresh every 7000ms (7 seconds)
@@ -76,7 +77,8 @@ def create_chart(chart_type, title=None, labels=None, values=None, x=None, y=Non
         )
     else:
         raise ValueError("Unsupported chart type")
-    
+
+
 # Update graph layout to ensure dark theme even when empty
 def update_dark_theme_graph(fig, showlegend=False):
     """
@@ -85,32 +87,36 @@ def update_dark_theme_graph(fig, showlegend=False):
     :return: The updated figure object with dark theme settings.
     """
     fig.update_layout(
-        paper_bgcolor="#303030",   # Dark background for the paper
-        plot_bgcolor="#222222",    # Dark plot background
+        paper_bgcolor="#303030",  # Dark background for the paper
+        plot_bgcolor="#222222",  # Dark plot background
         title_font_color="white",  # White title color
         font=dict(color="white"),  # White font color for labels and text
         xaxis=dict(
             title_font=dict(color="white"),  # X-axis title font color
-            tickfont=dict(color="white"),    # X-axis tick color
+            tickfont=dict(color="white"),  # X-axis tick color
         ),
         yaxis=dict(
             title_font=dict(color="white"),  # Y-axis title font color
-            tickfont=dict(color="white"),    # Y-axis tick color
+            tickfont=dict(color="white"),  # Y-axis tick color
         ),
         # Handle empty state
         showlegend=showlegend,  # Optional: hide legend if not needed
         margin=dict(l=0, r=0, t=30, b=30),  # Tighten margins
         # In case of empty data, make sure background remains dark
-        annotations=[
-            {
-                'text': 'No Data Available',
-                'xref': 'paper',
-                'yref': 'paper',
-                'showarrow': False,
-                'font': {'size': 20, 'color': 'white'},
-                'align': 'center',
-            }
-        ] if not fig.data else [],
+        annotations=(
+            [
+                {
+                    "text": "No Data Available",
+                    "xref": "paper",
+                    "yref": "paper",
+                    "showarrow": False,
+                    "font": {"size": 20, "color": "white"},
+                    "align": "center",
+                }
+            ]
+            if not fig.data
+            else []
+        ),
     )
     return fig
 
@@ -173,7 +179,6 @@ def render_page_content(n_intervals):
         processes,
     ) = fetch_all_data()
 
-    device_info_data = device_info_data
     model = device_info_data.get("model", "N/A")
     device_name = device_info_data.get("device_name", "Unknown")
     ip_address = device_info_data.get("ip_address", "0.0.0.0")
@@ -219,7 +224,7 @@ def render_page_content(n_intervals):
     )
 
     network_speed_fig = update_dark_theme_graph(network_speed_fig)
-    
+
     # Network I/O Graph
     network_io_fig = create_chart(
         chart_type="bar",
@@ -245,7 +250,7 @@ def render_page_content(n_intervals):
 
     # Update layout for dark theme
     memory_usage_fig = update_dark_theme_graph(memory_usage_fig, showlegend=True)
-    
+
     # Disk Usage
     disk_usage_fig = create_chart(
         chart_type="pie",
@@ -256,7 +261,7 @@ def render_page_content(n_intervals):
 
     # Update layout for dark theme
     disk_usage_fig = update_dark_theme_graph(disk_usage_fig, showlegend=True)
-    
+
     # Sort by CPU usage (descending) and limit to top 15
     process_rows = [
         html.Tr(
@@ -308,7 +313,8 @@ def render_page_content(n_intervals):
         connections_rows,
     ]
 
-#server = app.server
+
+# server = app.server
 # main
 if __name__ == "__main__":
-   app.run_server(debug=False)
+    app.run_server(debug=True)

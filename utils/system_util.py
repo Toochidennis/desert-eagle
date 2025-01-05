@@ -2,18 +2,17 @@ from dash import html
 import dash_bootstrap_components as dbc
 
 # Common styles
-CARD_STYLE = {
-    "textAlign": "start",
-    "borderRadius": "16px",
-    "color": "#FFFFFF"
-}
+CARD_STYLE = {"textAlign": "start", "borderRadius": "16px", "color": "#FFFFFF"}
 
-LABEL_STYLE = {
-    "fontSize": "16px", "color": "#969696"
-}
+LABEL_STYLE = {"fontSize": "16px", "color": "#969696"}
 
 CARD_DATA = [
-    {"title": "CPU", "id": "cpu-usage", "sub_id": "cpu-used", "icon_name": "bi bi-cpu",},
+    {
+        "title": "CPU",
+        "id": "cpu-usage",
+        "sub_id": "cpu-used",
+        "icon_name": "bi bi-cpu",
+    },
     {
         "title": "MEMORY",
         "id": "memory-usage",
@@ -37,18 +36,32 @@ def create_app_bar():
                 html.Div(
                     [
                         html.Img(
-                            src=r"assets/veya.jpg",
+                            src=r"assets/logo.jpg",
                             width="50px",
-                            style={"marginRight": "10px"},
+                            style={
+                                "marginRight": "10px",
+                                "animation": "moveLTR 5s linear infinite",  # Apply animation
+                                "position": "relative",
+                            },
                         ),
-                        html.H2("Desert Eagle", className="display-7", style={"color": "#ADD8E6"},),
+                        html.H2(
+                            "Desert Eagle",
+                            className="display-7",
+                            style={"color": "#ADD8E6"},
+                        ),
                     ],
                     style={"display": "flex", "alignItems": "center"},
                 ),
                 width="auto",
             ),
             dbc.Col(
-                html.H3("System Monitoring Dashboard", style={"marginLeft": "10rem", "color": "#ADD8E6",},),
+                html.H3(
+                    "System Monitoring Dashboard",
+                    style={
+                        "marginLeft": "10rem",
+                        "color": "#ADD8E6",
+                    },
+                ),
             ),
         ],
         justify="between",
@@ -82,7 +95,13 @@ def create_card(title, id, sub_id, icon_name):
                             html.H4(
                                 title, style={"fontSize": "18px", "color": "#969696"}
                             ),
-                            html.I(className=icon_name, style={"fontSize": "1.5rem", "color": "#ADD8E6",},),
+                            html.I(
+                                className=icon_name,
+                                style={
+                                    "fontSize": "1.5rem",
+                                    "color": "#ADD8E6",
+                                },
+                            ),
                         ],
                         style={
                             "display": "flex",
@@ -182,4 +201,51 @@ def create_dashboard_cards():
             *[create_card(**card) for card in CARD_DATA],
         ],
         style={"paddingBottom": "2rem"},
+    )
+
+
+def create_footer():
+    return dbc.Card(
+        dbc.CardBody(
+            dbc.Row(
+                [
+                    dbc.Col(
+                        [
+                            html.A(
+                                "GitHub",
+                                href="https://github.com/ToochiDennis",
+                                target="_blank",
+                                style={"marginRight": "10px", "textDecoration": "none"},
+                            ),
+                            html.A(
+                                "LinkedIn",
+                                href="https://www.linkedin.com/in/toochukwu-dennis-241b491bb/",
+                                target="_blank",
+                                style={"textDecoration": "none"},
+                            ),
+                        ],
+                        width="auto",
+                    ),
+                    dbc.Col(
+                        html.P(
+                            "Developed by TX2, © 2025",
+                            style={"margin": "0", "textAlign": "center"},
+                        ),
+                        width=True,
+                        className="d-flex align-items-center justify-content-center",
+                    ),
+                ],
+                justify="between",
+                align="center",
+            )
+        ),
+        className="border-0 shadow-lg",
+        style={
+            "textAlign": "start",
+            "borderRadius": "16px",
+            "color": "#FFFFFF",
+            "bottom": "0",
+            "marginTop": "2rem",
+            "width": "100%",
+        },  
     )
