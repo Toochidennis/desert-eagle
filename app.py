@@ -37,7 +37,7 @@ content = html.Div(
         create_footer(),
         dcc.Interval(
             id="interval-component",
-            interval=7000,  # Refresh every 7000ms (7 seconds)
+            interval=15000,  # Refresh every 7000ms (7 seconds)
             n_intervals=0,
         ),
     ],
