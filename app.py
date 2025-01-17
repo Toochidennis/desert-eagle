@@ -138,7 +138,7 @@ def fetch_all_data():
         return [None] * 7
 
 
-# Callback to update dashboard data every 7 seconds
+# Callback to update dashboard data every 15 seconds
 @app.callback(
     [
         Output("model", "children"),
